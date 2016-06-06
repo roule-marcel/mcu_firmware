@@ -10,134 +10,8 @@
 
 #include <pwm/pwm.h>
 
-// read uint16 separated by spaces (' ') in a buffer.
-// buf is the input buffer
-// returns a pointer on the next value to extract.
-// the uint16 is stored in the ret pointer.
-// ok is 0 in case of an error, else 1
-char * read_uint16(uint16_t * ret, char * buf, int * ok) {
-	int i = 0;
-	int hex = 0;
-
-	*ret = 0;
-	*ok = 0;
-
-	while(buf[i] != 0)
-	{
-		if (buf[i] == 'x')
-			hex = 1;
-		else if (buf[i] == ' ') {
-			*ok = 1;
-			return &buf[i+1];
-		}
-		else {
-			if (hex) {
-				if (buf[i] >= '0' && buf[i] <= '9') {
-					*ret *= 16;
-					*ret += (buf[i] - '0');
-				}
-				else if (buf[i] >= 'a' && buf[i] <= 'f') {
-					*ret *= 16;
-					*ret += (buf[i] + 10 - 'a');
-				}
-				else if (buf[i] >= 'A' && buf[i] <= 'F') {
-					*ret *= 16;
-					*ret += (buf[i] + 10 - 'A');
-				}
-				else {
-					cprintf("%c is not a number\r\n", buf[i]);
-					return NULL;
-				}
-			}
-			else {
-				if (buf[i] >= '0' && buf[i] <= '9') {
-					*ret *= 10;
-					*ret += (buf[i] - '0');
-				}
-				else {
-					cprintf("%c is not a number\r\n", buf[i]);
-					return NULL;
-				}
-			}
-		}
-		i++;
-	}
-
-	*ok = 1;
-	return NULL;
-}
-
-// Write a value in a given register
-int sh_reg_write(char * buf) {
-	uint16_t reg;
-	uint16_t val;
-	int ok;
-
-	unsigned int * p;
-
-	cprintf("write\n\r");
-
-	if (buf[1] != ' ' || buf[2] == 0) {
-		cprintf("correct usage:\r\n");
-		cprintf("\t%c REGISTER VALUE\r\n", buf[0]);
-		return -1;
-	}
-
-	buf = &buf[2];
-	buf = read_uint16(&reg, buf, &ok);
-	if (ok == 0) {
-		cprintf("Something went terribly wrong\r\n");
-		return -1;
-	}
-	buf = read_uint16(&val, buf, &ok);
-	if (ok == 0) {
-		cprintf("Something went terribly wrong\r\n");
-		return -1;
-	}
-
-	cprintf("r=%d v=%d\r\n", reg, val);
-
-	p = (unsigned int *)reg;
-	*p = val;
-
-	return 0;
-}
-
-// Read and display the value of a given register
-int sh_reg_read(char * buf) {
-	uint16_t reg;
-	uint16_t val;
-	int ok;
-
-	unsigned int * p;
-
-	cprintf("read\n\r");
-
-	if (buf[1] != ' ' || buf[2] == 0) {
-		cprintf("correct usage:\r\n");
-		cprintf("\t%c REGISTER\r\n", buf[0]);
-		return -1;
-	}
-
-	buf = &buf[2];
-	buf = read_uint16(&reg, buf, &ok);
-	if (ok == 0) {
-		cprintf("Something went terribly wrong\r\n");
-		return -1;
-	}
-
-	p = (unsigned int *)reg;
-	val = *p;
-
-	cprintf("r=%d v=%d\r\n", reg, val);
-
-	return 0;
-}
-
-int sh_pwm(char * buf) {
-	cprintf("Not implemented yet\n\r");
-	return 0;
-}
+#include "sh_reg.h"
+#include "sh_pwm.h"
 
 //--------------------------------------------------//
 // Main function with init an an endless loop that  //
@@ -151,6 +25,7 @@ int main(void) {
     int led = 0;
 
 	pwm_t pwm_0;
+	pwm_t pwm_1;
 
     WDTCTL = WDTPW | WDTHOLD;           // Init watchdog timer
 
@@ -178,6 +53,11 @@ int main(void) {
 
 	pwm_init(&pwm_0, 0x0180, 20000, 100);
 	pwm_enable(&pwm_0);
+
+	pwm_init(&pwm_1, 0x0188, 20000, 100);
+	pwm_enable(&pwm_1);
+
+	set_pwm_dev(&pwm_0, &pwm_1);
 
     eint();                             // Enable interrupts
 
