@@ -14,7 +14,7 @@ LDFLAGS         = -Tlink.ld -Ilib
 CC              = msp430-gcc
 LD              = msp430-gcc
 
-TOOL_PATH = ../../opencores/openmsp430/tools/bin
+TOOL_PATH = $(LIBSOFTCORE_PATH)/opencores/openmsp430/tools/bin
 
 .PHONY: all FORCE clean download download-jtag download-bsl dist
 
