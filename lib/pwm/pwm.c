@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <hardware/omsp_system.h>
 
+#include <serial/cprintf/cprintf.h>
+
 #include "pwm_regs.h"
 
 int pwm_init(pwm_t * dev, uint16_t per_addr, uint16_t freq_hz, uint16_t dead_band_us) {
@@ -13,7 +15,7 @@ int pwm_init(pwm_t * dev, uint16_t per_addr, uint16_t freq_hz, uint16_t dead_ban
 
 	dev->regs->PERIOD = CPU_FREQ_HZ/dev->freq_hz;
 	dev->regs->DEAD_BAND = dev->dead_band_us*(CPU_FREQ_HZ/1000000);
-	
+
 	return 0;
 }
 

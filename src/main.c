@@ -51,10 +51,10 @@ int main(void) {
 	shell_add('r', sh_reg_read);
 	shell_add('p', sh_pwm);
 
-	pwm_init(&pwm_0, 0x0180, 20000, 100);
+	pwm_init(&pwm_0, 0x0180, 20000, 2);
 	pwm_enable(&pwm_0);
 
-	pwm_init(&pwm_1, 0x0188, 20000, 100);
+	pwm_init(&pwm_1, 0x0188, 20000, 2);
 	pwm_enable(&pwm_1);
 
 	set_pwm_dev(&pwm_0, &pwm_1);
