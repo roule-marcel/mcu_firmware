@@ -108,8 +108,9 @@ cprintf (const char *fmt, ...)
 
   while (*fmt)
     {
-      if (*fmt != '%')
+      if (*fmt != '%'){
 	tty_putc (*fmt);
+	  }
       else
 	switch (*++fmt)
 	  {

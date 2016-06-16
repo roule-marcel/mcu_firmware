@@ -13,6 +13,24 @@
 #include "sh_reg.h"
 #include "sh_pwm.h"
 
+//interrupt (TIMERA1_VECTOR) /*enablenested*/ INT_Timer_overflow(void)
+//{
+//	static uint8_t blink = 0;
+//	static uint16_t cnt = 0;
+//
+//	if (cnt > 30)
+//	{
+//		// I'm pretty sure this is self-explanatory
+//  		P3OUT = 0xFF * blink;
+//  		blink = !blink;
+//		cnt = 0;
+//	}
+//	cnt++;
+//
+//	// Clear Interrupt
+//	TACTL &= ~TAIFG;
+//}
+
 //--------------------------------------------------//
 // Main function with init an an endless loop that  //
 // is synced with the interrupts trough the         //
@@ -29,6 +47,10 @@ int main(void) {
 
     WDTCTL = WDTPW | WDTHOLD;           // Init watchdog timer
 
+//	// Clock source SMCLK (cause why not?) ; Input devider /8 ; Up mode (count from 0 to TACCR0) ; Enable Interrupts
+//	TACTL |= TASSEL1 | ID1 | ID0 | MC0 | TAIE;
+//	TACCR0 = 50000;
+
     P3DIR  = 0xff;
     P3OUT  = 0xff;                      // Light LED during init
 
@@ -37,7 +59,7 @@ int main(void) {
 	uart_init(115200);
 	shell_init();
 
-	while ((P1IN & 0x01) == 0);
+//	while ((P1IN & 0x01) == 0);
 
     P3OUT  = 0x00;                      // Switch off LED
 
@@ -62,8 +84,8 @@ int main(void) {
     eint();                             // Enable interrupts
 
     while (1) {                         //main loop, never ends...
-
         cprintf("> ");                   //show prompt
+
         reading = 1;
         while (reading) {               //loop and read characters
 

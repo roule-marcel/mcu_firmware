@@ -31,7 +31,7 @@ wakeup interrupt (UART_RX_VECTOR) INT_uart_rx(void) {
 
 // UART Peripheral initialization
 void uart_init(uint32_t baud) {
-    UART_BAUD = (CPU_FREQ_HZ/115200)-1;
+    UART_BAUD = (CPU_FREQ_HZ/9600)-1;
     UART_CTL  = UART_EN | UART_IEN_RX;
 }
 
