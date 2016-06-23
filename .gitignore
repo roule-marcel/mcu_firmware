@@ -1,3 +1,7 @@
 .*.swp
 *.elf
 *.o
+
+init_ram16_pkg.vhd
+mcu_firmware.bin
+tools/init_ram_pkg/init_ram_pkg

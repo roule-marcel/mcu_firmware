@@ -11,8 +11,6 @@ int tty_putc (int txdata) {
   // Wait until the TX buffer is not full
   while (UART_STAT & UART_TX_FULL);
 
-P3OUT = txdata;
-
   // Write the output character
   UART_TXD = txdata;
 

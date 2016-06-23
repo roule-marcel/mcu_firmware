@@ -12,24 +12,7 @@
 
 #include "sh_reg.h"
 #include "sh_pwm.h"
-
-//interrupt (TIMERA1_VECTOR) /*enablenested*/ INT_Timer_overflow(void)
-//{
-//	static uint8_t blink = 0;
-//	static uint16_t cnt = 0;
-//
-//	if (cnt > 30)
-//	{
-//		// I'm pretty sure this is self-explanatory
-//  		P3OUT = 0xFF * blink;
-//  		blink = !blink;
-//		cnt = 0;
-//	}
-//	cnt++;
-//
-//	// Clear Interrupt
-//	TACTL &= ~TAIFG;
-//}
+#include "sh_boot.h"
 
 //--------------------------------------------------//
 // Main function with init an an endless loop that  //
@@ -47,39 +30,32 @@ int main(void) {
 
     WDTCTL = WDTPW | WDTHOLD;           // Init watchdog timer
 
-//	// Clock source SMCLK (cause why not?) ; Input devider /8 ; Up mode (count from 0 to TACCR0) ; Enable Interrupts
-//	TACTL |= TASSEL1 | ID1 | ID0 | MC0 | TAIE;
-//	TACCR0 = 50000;
-
     P3DIR  = 0xff;
-    P3OUT  = 0xff;                      // Light LED during init
+//    P3OUT  = 0xff;                      // Light LED during init
 
 	P1DIR = 0x00;
 
-	uart_init(115200);
+	uart_init(9600);
 	shell_init();
-
-//	while ((P1IN & 0x01) == 0);
 
     P3OUT  = 0x00;                      // Switch off LED
 
-    cprintf("\r\n====== openMSP430 in action ======\r\n");   //say hello
-    cprintf("\r\nSimple Line Editor Ready\r\n");
-	cprintf("\r\nBAUD=%d\r\n", (CPU_FREQ_HZ/115200)-1);
-
-	cprintf("\r\ntest=%c\r\n", 'x');
+	cprintf("\r\n====== Marcel MCU ======\r\n");   //say hello
 
 	shell_add('w', sh_reg_write);
 	shell_add('r', sh_reg_read);
 	shell_add('p', sh_pwm);
+	shell_add('b', sh_bootloader);
 
-	pwm_init(&pwm_0, 0x0180, 20000, 0);
+	pwm_init(&pwm_0, 0x0180, 20000, 2);
 	pwm_enable(&pwm_0);
 
-	pwm_init(&pwm_1, 0x0188, 20000, 0);
+	pwm_init(&pwm_1, 0x0188, 20000, 2);
 	pwm_enable(&pwm_1);
 
 	set_pwm_dev(&pwm_0, &pwm_1);
+
+	P3OUT = 0x80;
 
     eint();                             // Enable interrupts
 

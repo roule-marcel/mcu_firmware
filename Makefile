@@ -26,6 +26,7 @@ all: ${NAME}.elf $(NAME).bin
 download: download-uart
 #download: download-jtag
 #download: download-bsl
+bootloader: download-bootloader
 
 #additional rules for files
 
@@ -59,6 +60,9 @@ download-bsl: all
 
 download-uart: all
 	${TOOL_PATH}/openmsp430-loader.tcl -device /dev/ttyUSB0 -baudrate 115200 ${NAME}.elf
+
+download-bootloader: all
+	tools/bootloader/bootloader.sh ${NAME}.bin
 
 bin:
 	./tools/init_ram_pkg/init_ram_pkg mcu_firmware.bin > init_ram16_pkg.vhd
