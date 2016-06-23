@@ -2,22 +2,26 @@
 
 #include <serial/cprintf/cprintf.h>
 
+char help[] = "help";
+
 typedef struct{
 	char c;
 	int (* func)(char * buf);
+	char * description;
 } shell_func_t;
 
 int shell_func_list_size = 0;
 shell_func_t shell_func_list[_SHELL_FUNC_LIST_MAX_SIZE];
 
 void shell_init() {
-
+	shell_add('h', sh_help, help);
 }
 
-int shell_add(char c, int (* pfunc)(char *)) {
+int shell_add(char c, int (* pfunc)(char *), const char * description) {
 	if (shell_func_list_size < _SHELL_FUNC_LIST_MAX_SIZE) {
 		shell_func_list[shell_func_list_size].c = c;
 		shell_func_list[shell_func_list_size].func = pfunc;
+		shell_func_list[shell_func_list_size].description = description;
 		shell_func_list_size++;
 		return 0;
 	}
@@ -35,4 +39,13 @@ int shell_exec(char c, char * buf)
 	}
 	cprintf("%c: no such command\r\n");
 	return -1;
+}
+
+int sh_help(char * buf) {
+	int i;
+	for(i = 0 ; i < shell_func_list_size ; i++) {
+		cprintf("%c %s\r\n", shell_func_list[i].c, shell_func_list[i].description);
+	}
+
+	return 0;
 }

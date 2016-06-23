@@ -14,6 +14,7 @@
 #include "sh_pwm.h"
 #include "sh_boot.h"
 
+
 //--------------------------------------------------//
 // Main function with init an an endless loop that  //
 // is synced with the interrupts trough the         //
@@ -42,10 +43,12 @@ int main(void) {
 
 	cprintf("\r\n====== Marcel MCU ======\r\n");   //say hello
 
-	shell_add('w', sh_reg_write);
-	shell_add('r', sh_reg_read);
-	shell_add('p', sh_pwm);
-	shell_add('b', sh_bootloader);
+	shell_add('w', sh_reg_write, "write");
+	shell_add('r', sh_reg_read, "read");
+	shell_add('p', sh_pwm, "pwm");
+	shell_add('b', sh_bootloader, "bootloader");
+
+	sh_help(NULL);
 
 	pwm_init(&pwm_0, 0x0180, 20000, 2);
 	pwm_enable(&pwm_0);
