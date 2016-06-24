@@ -9,11 +9,12 @@
 #include <shell/shell.h>
 
 #include <pwm/pwm.h>
+#include <qei/qei.h>
 
 #include "sh_reg.h"
 #include "sh_pwm.h"
+#include "sh_qei.h"
 #include "sh_boot.h"
-
 
 //--------------------------------------------------//
 // Main function with init an an endless loop that  //
@@ -28,6 +29,9 @@ int main(void) {
 
 	pwm_t pwm_0;
 	pwm_t pwm_1;
+
+	qei_t qei_0;
+	qei_t qei_1;
 
     WDTCTL = WDTPW | WDTHOLD;           // Init watchdog timer
 
@@ -46,6 +50,7 @@ int main(void) {
 	shell_add('w', sh_reg_write, "write");
 	shell_add('r', sh_reg_read, "read");
 	shell_add('p', sh_pwm, "pwm");
+	shell_add('e', sh_qei, "encoder");
 	shell_add('b', sh_bootloader, "bootloader");
 
 	sh_help(NULL);
@@ -56,7 +61,11 @@ int main(void) {
 	pwm_init(&pwm_1, 0x0188, 20000, 2);
 	pwm_enable(&pwm_1);
 
-	set_pwm_dev(&pwm_0, &pwm_1);
+	sh_pwm_set_dev(&pwm_0, &pwm_1);
+
+	qei_init(&qei_0, 0x0198);
+	qei_init(&qei_1, 0x019A);
+	sh_qei_set_dev(&qei_0, &qei_1);
 
 	P3OUT = 0x80;
 

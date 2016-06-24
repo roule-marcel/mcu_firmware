@@ -9,7 +9,7 @@
 pwm_t * pwm_l;
 pwm_t * pwm_r;
 
-void set_pwm_dev(pwm_t * left, pwm_t * right) {
+void sh_pwm_set_dev(pwm_t * left, pwm_t * right) {
 	pwm_l = left;
 	pwm_r = right;
 }
