@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 typedef struct {
-	uint16_t * reg;
+	uint32_t * reg;
 } qei_t;
 
 int qei_init(qei_t * dev, uint16_t per_addr);

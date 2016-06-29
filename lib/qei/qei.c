@@ -6,7 +6,7 @@
 #include <serial/cprintf/cprintf.h>
 
 int qei_init(qei_t * dev, uint16_t per_addr) {
-	dev->reg = (uint16_t *)per_addr;
+	dev->reg = (uint32_t *)per_addr;
 
 	return 0;
 }

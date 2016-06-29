@@ -116,7 +116,7 @@ int main(void) {
 	sh_qei_set_dev(&qei_0, &qei_1);
 
 	timer_init();
-	id1 = timer_add_cb(500,qei_sim,0);
+	id1 = timer_add_cb(1,qei_sim,0);
 	timer_start_cb(id1);
 
 	P3OUT = 0x80;
