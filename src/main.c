@@ -114,8 +114,8 @@ int main(void) {
 	sh_qei_set_dev(&qei_0, &qei_1);
 
 	timer_init();
-	id1 = timer_add_cb(1,qei_sim,0);
-	timer_start_cb(id1);
+	id1 = timer_add_cb(qei_sim,0);
+	timer_start_cb(id1, 1);
 
 	P3OUT = 0x80;
 
@@ -129,6 +129,7 @@ int main(void) {
 				case '\r':
 					//case '\n':
 					cprintf("\r\n");    //finish line
+					buf[pos] = 0;
 					pos = 0;            //reset buffer
 
 					// Call the function

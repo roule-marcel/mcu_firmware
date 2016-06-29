@@ -21,13 +21,12 @@ int timer_init() {
 	return 0;
 }
 
-int timer_add_cb(uint16_t period_ms, void (* pfunc)(void *), void * param) {
+int timer_add_cb(void (* pfunc)(void *), void * param) {
 	int id = timer_func_list_size;
 
 	if (timer_func_list_size < _TIMER_FUNC_LIST_MAX_SIZE) {
 		timer_func_list[timer_func_list_size].running = 0;
 		timer_func_list[timer_func_list_size].counter = 0;
-		timer_func_list[timer_func_list_size].period_ms = period_ms;
 		timer_func_list[timer_func_list_size].func = pfunc;
 		timer_func_list[timer_func_list_size].param = param;
 		timer_func_list_size++;
@@ -37,7 +36,9 @@ int timer_add_cb(uint16_t period_ms, void (* pfunc)(void *), void * param) {
 	return -1;
 }
 
-int timer_start_cb(int id) {
+int timer_start_cb(int id, uint16_t period_ms) {
+	timer_func_list[id].counter = 0;
+	timer_func_list[id].period_ms = period_ms;
 	timer_func_list[id].running = 1;
 
 	return 0;
