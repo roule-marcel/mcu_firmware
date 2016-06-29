@@ -112,7 +112,7 @@ int main(void) {
 	sh_pwm_set_dev(&pwm_0, &pwm_1);
 
 	qei_init(&qei_0, 0x0198);
-	qei_init(&qei_1, 0x019A);
+	qei_init(&qei_1, 0x019C);
 	sh_qei_set_dev(&qei_0, &qei_1);
 
 	timer_init();
