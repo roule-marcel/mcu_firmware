@@ -17,7 +17,7 @@ void shell_init() {
 	shell_add('h', sh_help, help);
 }
 
-int shell_add(char c, int (* pfunc)(char *), const char * description) {
+int shell_add(char c, int (* pfunc)(char *), char * description) {
 	if (shell_func_list_size < _SHELL_FUNC_LIST_MAX_SIZE) {
 		shell_func_list[shell_func_list_size].c = c;
 		shell_func_list[shell_func_list_size].func = pfunc;

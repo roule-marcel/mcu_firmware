@@ -25,8 +25,8 @@ wakeup interrupt (UART_RX_VECTOR) INT_uart_rx(void) {
 	// Clear the receive pending flag
 	UART_STAT = UART_RX_PND;
 
-	// Exit the low power mode
-	LPM0_EXIT;
+//	// Exit the low power mode
+//	LPM0_EXIT;
 }
 
 // UART Peripheral initialization
