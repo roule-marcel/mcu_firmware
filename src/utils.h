@@ -3,6 +3,6 @@
 
 #include <stdint.h>
 
-char * read_uint16(uint16_t * ret, char * buf, int * ok);
+uint16_t read_uint16(char * buf, int * ok);
 
 #endif //__UTILS_H__

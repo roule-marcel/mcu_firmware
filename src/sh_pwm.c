@@ -14,28 +14,22 @@ void sh_pwm_set_dev(pwm_t * left, pwm_t * right) {
 	pwm_r = right;
 }
 
-int sh_pwm(char * buf) {
+int sh_pwm(int argc, char ** argv) {
 	uint16_t left;
 	uint16_t right;
 	int ok;
 
-	if (buf[1] != ' ' || buf[2] == 0) {
+	if (argc < 3) {
+		cprintf("error: missing argument\r\n");
 		cprintf("correct usage:\r\n");
-		cprintf("\t%c LEFT RIGHT\r\n", buf[0]);
+		cprintf("\t%s LEFT RIGHT\r\n", argv[0]);
+
 		return -1;
 	}
 
-	buf = &buf[2];
-	buf = read_uint16(&left, buf, &ok);
-	if (ok == 0) {
-		cprintf("Something went terribly wrong\r\n");
-		return -1;
-	}
-	buf = read_uint16(&right, buf, &ok);
-	if (ok == 0) {
-		cprintf("Something went terribly wrong\r\n");
-		return -1;
-	}
+	left = read_uint16(argv[1], &ok);
+	right = read_uint16(argv[2], &ok);
+	cprintf("%d %d\r\n",left, right);
 
 	pwm_set_duty(pwm_l, (float)left/100);
 	pwm_set_duty(pwm_r, (float)right/100);

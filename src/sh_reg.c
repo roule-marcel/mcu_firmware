@@ -7,7 +7,7 @@
 #include "utils.h"
 
 // Write a value in a given register
-int sh_reg_write(char * buf) {
+int sh_reg_write(int argc, char ** argv) {
 	uint16_t reg;
 	uint16_t val;
 	int ok;
@@ -16,23 +16,16 @@ int sh_reg_write(char * buf) {
 
 	cprintf("write\n\r");
 
-	if (buf[1] != ' ' || buf[2] == 0) {
+	if (argc < 3) {
+		cprintf("error: missing argument\r\n");
 		cprintf("correct usage:\r\n");
-		cprintf("\t%c REGISTER VALUE\r\n", buf[0]);
+		cprintf("\t%s REGISTER VALUE\r\n", argv[0]);
+
 		return -1;
 	}
 
-	buf = &buf[2];
-	buf = read_uint16(&reg, buf, &ok);
-	if (ok == 0) {
-		cprintf("Something went terribly wrong\r\n");
-		return -1;
-	}
-	buf = read_uint16(&val, buf, &ok);
-	if (ok == 0) {
-		cprintf("Something went terribly wrong\r\n");
-		return -1;
-	}
+	reg = read_uint16(argv[1], &ok);
+	val = read_uint16(argv[2], &ok);
 
 	cprintf("r=%d v=%d\r\n", reg, val);
 
@@ -43,27 +36,24 @@ int sh_reg_write(char * buf) {
 }
 
 // Read and display the value of a given register
-int sh_reg_read(char * buf) {
+int sh_reg_read(int argc, char ** argv) {
 	uint16_t reg;
 	uint16_t val;
 	int ok;
 
 	unsigned int * p;
 
+	if (argc < 2) {
+		cprintf("error: missing argument\r\n");
+		cprintf("correct usage:\r\n");
+		cprintf("\t%s REGISTER\r\n", argv[0]);
+
+		return -1;
+	}
+
 	cprintf("read\n\r");
 
-	if (buf[1] != ' ' || buf[2] == 0) {
-		cprintf("correct usage:\r\n");
-		cprintf("\t%c REGISTER\r\n", buf[0]);
-		return -1;
-	}
-
-	buf = &buf[2];
-	buf = read_uint16(&reg, buf, &ok);
-	if (ok == 0) {
-		cprintf("Something went terribly wrong\r\n");
-		return -1;
-	}
+	reg = read_uint16(argv[1], &ok);
 
 	p = (unsigned int *)reg;
 	val = *p;

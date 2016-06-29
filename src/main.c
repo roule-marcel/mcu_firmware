@@ -68,12 +68,10 @@ void qei_sim (void * p) {
 // lowpower mode.                                   //
 //--------------------------------------------------//
 int main(void) {
-    int reading = 0;
     int pos = 0;
     char buf[40];
-    int led = 0;
 
-	int id1, id2;
+	int id1;
 
 	pwm_t pwm_0;
 	pwm_t pwm_1;
@@ -101,7 +99,7 @@ int main(void) {
 	shell_add('e', sh_qei, "encoder");
 	shell_add('b', sh_bootloader, "bootloader");
 
-	sh_help(NULL);
+	sh_help(0, NULL);
 
 	pwm_init(&pwm_0, 0x0180, 20000, 2);
 	pwm_enable(&pwm_0);

@@ -4,7 +4,7 @@
 
 #include <serial/cprintf/cprintf.h>
 
-int sh_bootloader(char * buf) {
+int sh_bootloader(int argc, char ** argv) {
 	uint16_t * p_boot;
 	p_boot = (uint16_t*)0x0190;
 

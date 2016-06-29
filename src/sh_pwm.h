@@ -4,6 +4,6 @@
 #include <pwm/pwm.h>
 
 void sh_pwm_set_dev(pwm_t * left, pwm_t * right);
-int sh_pwm(char * buf);
+int sh_pwm(int argc, char ** argv);
 
 #endif //__SH_PWM_H__
