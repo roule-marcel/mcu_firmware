@@ -62,6 +62,13 @@ void qei_sim (void * p) {
 	else state = 0;
 }
 
+int interactive = 0;
+int sh_interactive(int argc, char ** argv) {
+	interactive = !interactive;
+	
+	return 0;
+}
+
 //--------------------------------------------------//
 // Main function with init an an endless loop that  //
 // is synced with the interrupts trough the         //
@@ -93,6 +100,7 @@ int main(void) {
 
 	cprintf("\r\n====== Marcel MCU ======\r\n");   //say hello
 
+	shell_add('i', sh_interactive, "interactive mode");
 	shell_add('w', sh_reg_write, "write");
 	shell_add('r', sh_reg_read, "read");
 	shell_add('p', sh_pwm, "pwm");
@@ -147,7 +155,8 @@ int main(void) {
 				default:
 					//only store characters if buffer has space
 					if (pos < sizeof(buf)) {
-						cprintf("%c", c);     //echo
+						if (interactive)
+							cprintf("%c", c);     //echo
 						buf[pos++] = c; //store
 					}
 			}
