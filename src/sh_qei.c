@@ -28,6 +28,7 @@ int sh_qei(int argc, char ** argv) {
 	static int streaming = 0;
 	static int timer_id = -1;
 	uint16_t period;
+	uint16_t it_max = 0;
 	int ok = 0;
 
 	if (argc == 1) {
@@ -46,7 +47,11 @@ int sh_qei(int argc, char ** argv) {
 		streaming = 1;
 		period = read_uint16(argv[1], &ok);
 
-		timer_start_cb(timer_id, period);
+		if (argc > 2) {
+			it_max = read_uint16(argv[2], &ok);
+		}
+
+		timer_start_cb(timer_id, period, it_max);
 	}
 
 	return 0;

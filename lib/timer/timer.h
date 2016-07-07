@@ -7,7 +7,7 @@
 
 int timer_init();
 int timer_add_cb(void (* pfunc)(void *), void * param);
-int timer_start_cb(int id, uint16_t period_ms);
+int timer_start_cb(int id, uint16_t period_ms, uint16_t it_max);
 int timer_stop_cb(int id);
 
 #endif //__TIMER_H__
