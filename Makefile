@@ -26,7 +26,7 @@ all: ${NAME}.elf $(NAME).bin
 download: download-uart
 #download: download-jtag
 #download: download-bsl
-bootloader: download-bootloader
+bootloader: download-bootloader-ssh
 
 #additional rules for files
 
@@ -63,6 +63,11 @@ download-uart: all
 
 download-bootloader: all
 	tools/bootloader/bootloader.sh ${NAME}.bin
+
+download-bootloader-ssh: all
+	scp ${NAME}.bin 10.42.0.100:~/
+	ssh 10.42.0.100 'bash -s' < tools/bootloader/bootloader.sh ${NAME}.bin
+
 
 bin:
 	./tools/init_ram_pkg/init_ram_pkg mcu_firmware.bin > init_ram16_pkg.vhd

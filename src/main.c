@@ -93,7 +93,7 @@ int main(void) {
 
 	P1DIR = 0x00;
 
-	uart_init(9600);
+	uart_init(115200);
 	shell_init();
 
     P3OUT  = 0x00;                      // Switch off LED
@@ -122,8 +122,10 @@ int main(void) {
 	sh_qei_set_dev(&qei_0, &qei_1);
 
 	timer_init();
-	id1 = timer_add_cb(qei_sim,0);
-	timer_start_cb(id1, 1, 0);
+//	id1 = timer_add_cb(qei_sim,0);
+//	timer_start_cb(id1, 1, 0);
+	id1 = timer_add_cb(blink,(void*)0xFF);
+	timer_start_cb(id1, 1000, 0);
 
 	P3OUT = 0x80;
 
