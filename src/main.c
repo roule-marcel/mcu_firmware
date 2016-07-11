@@ -128,6 +128,7 @@ int main(void) {
 	qei_init(&qei_l, 0x0198);
 	qei_init(&qei_r, 0x019C);
 	sh_qei_set_dev(&qei_l, &qei_r);
+	sh_qei_set_pwm(&pwm_l, &pwm_r);
 
 	timer_init();
 //	id1 = timer_add_cb(qei_sim,0);

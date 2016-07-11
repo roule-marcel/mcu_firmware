@@ -31,3 +31,7 @@ void pwm_set_duty(pwm_t * dev, float duty) {
 	reg_duty = (dev->regs->PERIOD*dev->duty) - dev->regs->DEAD_BAND;
 	dev->regs->DUTY = reg_duty;
 }
+
+void pwm_set_duty_raw(pwm_t * dev, uint16_t duty) {
+	dev->regs->DUTY = duty;
+}
