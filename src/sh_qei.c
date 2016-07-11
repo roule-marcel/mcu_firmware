@@ -1,5 +1,6 @@
 #include "sh_qei.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
  
@@ -16,12 +17,10 @@ void sh_qei_set_dev(qei_t * left, qei_t * right) {
 	qei_r = right;
 }
 
+char s[64];
 void disp(void * p) {
-	cprintf("%w %w %w %w\r\n", 
-			(uint16_t)(*(qei_l->reg) >> 16),
-			(uint16_t)(*(qei_l->reg)),
-			(uint16_t)(*(qei_r->reg) >> 16),
-			(uint16_t)(*(qei_r->reg)));
+	sprintf(s, "%ld %ld", qei_read_steps(qei_l), qei_read_steps(qei_r));
+	cprintf("%s\r\n", s);
 }
 
 int sh_qei(int argc, char ** argv) {

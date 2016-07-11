@@ -8,7 +8,7 @@ int sh_bootloader(int argc, char ** argv) {
 	uint16_t * p_boot;
 	p_boot = (uint16_t*)0x0190;
 
-	p_boot[1] = 0xE000;		// ADDRESS
+	p_boot[1] = 0xC000;		// ADDRESS
 // BAUD FREQ = 16*baud_rate / gcd(global_clock_freq, 16*baud_rate) = 16*9600/38400 = 4
 // BAUD LIMIT = (global_clock_freq / gcd(global_clock_freq, 16*baud_rate)) - baud_freq = 24000000/38400 - 4 = 621 = 0x26D
 // 9600

@@ -12,9 +12,12 @@
 #include <qei/qei.h>
 #include <timer/timer.h>
 
+#include "speed.h"
+
 #include "sh_reg.h"
 #include "sh_pwm.h"
 #include "sh_qei.h"
+#include "sh_speed.h"
 #include "sh_boot.h"
 
 void blink (void * p) {
@@ -80,11 +83,14 @@ int main(void) {
 
 	int id1;
 
-	pwm_t pwm_0;
-	pwm_t pwm_1;
+	pwm_t pwm_l;
+	pwm_t pwm_r;
 
-	qei_t qei_0;
-	qei_t qei_1;
+	qei_t qei_l;
+	qei_t qei_r;
+
+	pid_t pid_l;
+	pid_t pid_r;
 
     WDTCTL = WDTPW | WDTHOLD;           // Init watchdog timer
 
@@ -105,27 +111,33 @@ int main(void) {
 	shell_add('r', sh_reg_read, "read");
 	shell_add('p', sh_pwm, "pwm");
 	shell_add('e', sh_qei, "encoder");
+	shell_add('s', sh_speed, "speed controller");
+	shell_add('c', sh_speed_config, "speed configuration");
 	shell_add('b', sh_bootloader, "bootloader");
 
 	sh_help(0, NULL);
 
-	pwm_init(&pwm_0, 0x0180, 20000, 2);
-	pwm_enable(&pwm_0);
+	pwm_init(&pwm_l, 0x0180, 20000, 2);
+	pwm_enable(&pwm_l);
 
-	pwm_init(&pwm_1, 0x0188, 20000, 2);
-	pwm_enable(&pwm_1);
+	pwm_init(&pwm_r, 0x0188, 20000, 2);
+	pwm_enable(&pwm_r);
 
-	sh_pwm_set_dev(&pwm_0, &pwm_1);
+	sh_pwm_set_dev(&pwm_l, &pwm_r);
 
-	qei_init(&qei_0, 0x0198);
-	qei_init(&qei_1, 0x019C);
-	sh_qei_set_dev(&qei_0, &qei_1);
+	qei_init(&qei_l, 0x0198);
+	qei_init(&qei_r, 0x019C);
+	sh_qei_set_dev(&qei_l, &qei_r);
 
 	timer_init();
 //	id1 = timer_add_cb(qei_sim,0);
 //	timer_start_cb(id1, 1, 0);
 	id1 = timer_add_cb(blink,(void*)0xFF);
 	timer_start_cb(id1, 1000, 0);
+
+	speed_init(&pid_l, 1, 0, 0);
+	speed_init(&pid_r, 1, 0, 0);
+	sh_pid_set_dev(&pid_l, &pid_r);
 
 	P3OUT = 0x80;
 

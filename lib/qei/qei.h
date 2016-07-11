@@ -4,10 +4,10 @@
 #include <stdint.h>
 
 typedef struct {
-	uint32_t * reg;
+	uint16_t * reg;
 } qei_t;
 
 int qei_init(qei_t * dev, uint16_t per_addr);
-int qei_read_steps(qei_t * dev);
+int32_t qei_read_steps(qei_t * dev);
 
 #endif //__QEI_H__
