@@ -50,7 +50,7 @@ int sh_pwm(int argc, char ** argv) {
 	right = read_uint16(argv[2], &ok);
 	cprintf("%d %d\r\n",left, right);
 
-	pwm_set_duty(pwm_l, (float)left/100);
+	pwm_set_duty(pwm_l, 1-(float)left/100);
 	pwm_set_duty(pwm_r, (float)right/100);
 
 	return 0;

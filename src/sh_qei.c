@@ -28,7 +28,7 @@ void sh_qei_set_pwm(pwm_t * left, pwm_t * right) {
 
 char s[64];
 void disp(void * p) {
-	sprintf(s, "%ld %ld", qei_read_steps(qei_l), qei_read_steps(qei_r));
+	sprintf(s, "%ld %ld", -qei_read_steps(qei_l), qei_read_steps(qei_r));
 	cprintf("%s\r\n", s);
 }
 
