@@ -11,6 +11,7 @@
 #include <pwm/pwm.h>
 #include <qei/qei.h>
 #include <timer/timer.h>
+#include <buzzer/buzzer.h>
 
 #include "speed.h"
 
@@ -18,6 +19,7 @@
 #include "sh_pwm.h"
 #include "sh_qei.h"
 #include "sh_speed.h"
+#include "sh_buzzer.h"
 #include "sh_boot.h"
 
 void blink (void * p) {
@@ -92,6 +94,8 @@ int main(void) {
 	pid_t pid_l;
 	pid_t pid_r;
 
+	buzzer_t buzzer0;
+
     WDTCTL = WDTPW | WDTHOLD;           // Init watchdog timer
 
     P3DIR  = 0xff;
@@ -109,6 +113,7 @@ int main(void) {
 	shell_add('i', sh_interactive, "interactive mode");
 	shell_add('w', sh_reg_write, "write");
 	shell_add('r', sh_reg_read, "read");
+	shell_add('a', sh_buzzer, "buzzer");
 	shell_add('p', sh_pwm, "pwm");
 	shell_add('e', sh_qei, "encoder");
 	shell_add('s', sh_speed, "speed controller");
@@ -133,8 +138,12 @@ int main(void) {
 	timer_init();
 //	id1 = timer_add_cb(qei_sim,0);
 //	timer_start_cb(id1, 1, 0);
-	id1 = timer_add_cb(blink,(void*)0xFF);
-	timer_start_cb(id1, 1000, 0);
+//	id1 = timer_add_cb(blink,(void*)0xFF);
+//	timer_start_cb(id1, 1000, 0);
+
+	buzzer_init(&buzzer0, 0x1A0);
+	sh_buzzer_set_dev(&buzzer0);
+	buzzer(&buzzer0, 6000, 100);
 
 	speed_init(&pid_l, 1, 0, 0);
 	speed_init(&pid_r, 1, 0, 0);
