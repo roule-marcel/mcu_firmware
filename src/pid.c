@@ -1,15 +1,6 @@
 #include "pid.h"
 
-//typedef struct {
-//	int kp;
-//	int ki;
-//	int kd;
-//	int setPoint;
-//	int integrator;
-//	int lastError;
-//} pid_t;
-
-void pid_init(pid_t * pid, int kp, int ki, int kd) {
+void pid_init(pid_t * pid, float kp, float ki, float kd) {
 	pid_kp(pid, kp);
 	pid_ki(pid, ki);
 	pid_kd(pid, kd);
@@ -23,26 +14,26 @@ void pid_reset(pid_t * pid) {
 	pid->lastError = 0;
 }
 
-void pid_kp(pid_t * pid, int kp) {
+void pid_kp(pid_t * pid, float kp) {
 	pid->kp = kp;
 }
 
-void pid_ki(pid_t * pid, int ki) {
+void pid_ki(pid_t * pid, float ki) {
 	pid->ki = ki;
 }
 
-void pid_kd(pid_t * pid, int kd) {
+void pid_kd(pid_t * pid, float kd) {
 	pid->kd = kd;
 }
 
-void pid_setPoint(pid_t * pid, int setPoint) {
+void pid_setPoint(pid_t * pid, float setPoint) {
 	pid->setPoint = setPoint;
 }
 
-int pid_compute(pid_t * pid, int measure) {
-	int output;
-	int error;
-	int derivativeError;
+float pid_compute(pid_t * pid, float measure) {
+	float output;
+	float error;
+	float derivativeError;
 
 	error = pid->setPoint - measure;
 	pid->integrator += error;

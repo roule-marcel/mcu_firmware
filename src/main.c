@@ -84,6 +84,7 @@ int main(void) {
     char buf[40];
 
 	int id1;
+	int arrow = 0;
 
 	pwm_t pwm_l;
 	pwm_t pwm_r;
@@ -91,8 +92,8 @@ int main(void) {
 	qei_t qei_l;
 	qei_t qei_r;
 
-	pid_t pid_l;
-	pid_t pid_r;
+	speed_t speed_l;
+	speed_t speed_r;
 
 	buzzer_t buzzer0;
 
@@ -143,11 +144,14 @@ int main(void) {
 
 	buzzer_init(&buzzer0, 0x1A0);
 	sh_buzzer_set_dev(&buzzer0);
-	buzzer(&buzzer0, 6000, 100);
+	buzzer(&buzzer0, 4394, 100);
 
-	speed_init(&pid_l, 1, 0, 0);
-	speed_init(&pid_r, 1, 0, 0);
-	sh_pid_set_dev(&pid_l, &pid_r);
+	speed_init(&speed_l, &pwm_l, &qei_l, 50, 0.0006, 0.0004, 0.0);
+	speed_init(&speed_r, &pwm_r, &qei_r, 50, 0.0006, 0.0004, 0.0);
+
+
+	sh_speed_set_dev(&speed_l, &speed_r);
+	sh_speed_init();
 
 	P3OUT = 0x80;
 
@@ -156,33 +160,69 @@ int main(void) {
     while (1) {                         //main loop, never ends...
 		if (uart_available()) {
 			char c = uart_read();
-			switch (c) {
-				//process RETURN key
-				case '\r':
-					//case '\n':
-					cprintf("\r\n");    //finish line
-					buf[pos] = 0;
-					pos = 0;            //reset buffer
-
-					// Call the function
-					shell_exec(buf[0], buf);
-
-					break;
-				//backspace
-				case '\b':
-					if (pos > 0) {      //is there a char to delete?
-						pos--;          //remove it in buffer
-						cprintf("\b \b");
-					}
-					break;
-				//other characters
-				default:
-					//only store characters if buffer has space
-					if (pos < sizeof(buf)) {
-						if (interactive)
-							cprintf("%c", c);     //echo
-						buf[pos++] = c; //store
-					}
+			if (arrow == 0) {
+				switch (c) {
+					//process RETURN key
+					case '\r':
+						//case '\n':
+						cprintf("\r\n");    //finish line
+						buf[pos] = 0;
+						pos = 0;            //reset buffer
+	
+						// Call the function
+						shell_exec(buf[0], buf);
+	
+						break;
+					//backspace
+					case '\b':
+						if (pos > 0) {      //is there a char to delete?
+							pos--;          //remove it in buffer
+							cprintf("\b \b");
+						}
+						break;
+					//Arrow
+					case 27:
+					//other characters
+						arrow = 1;
+						break;
+					default:
+						//only store characters if buffer has space
+						if (pos < sizeof(buf)) {
+							if (interactive)
+								cprintf("%c", c);     //echo
+							buf[pos++] = c; //store
+						}
+				}
+			}
+			else if (arrow == 1) {
+				if (c == 91) {
+					arrow = 2;
+				}
+			}
+			else if (arrow == 2) {
+				switch (c) {
+					// UP
+					case 65:
+						cprintf("UP\r\n");
+						sh_speed_arrow_up();
+						break;
+					// DOWN
+					case 66:
+						cprintf("DOWN\r\n");
+						sh_speed_arrow_down();
+						break;
+					// RIGHT
+					case 67:
+						cprintf("RIGHT\r\n");
+						sh_speed_arrow_right();
+						break;
+					// LEFT
+					case 68:
+						cprintf("LEFT\r\n");
+						sh_speed_arrow_left();
+						break;
+				}
+				arrow = 0;
 			}
 		}
 	}

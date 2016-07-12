@@ -4,5 +4,6 @@
 #include <stdint.h>
 
 uint16_t read_uint16(char * buf, int * ok);
+int16_t read_int16(char * buf, int * ok);
 
 #endif //__UTILS_H__

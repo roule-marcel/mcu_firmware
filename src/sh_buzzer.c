@@ -12,7 +12,7 @@ void sh_buzzer_set_dev(buzzer_t * dev) {
 int sh_buzzer(int argc, char ** argv) {
 	int ok;
 	uint16_t duration = 100;
-	uint16_t period = 6000;
+	uint16_t period = 4394;
 
 	if (argc > 1) {
 		duration = read_uint16(argv[1], &ok);

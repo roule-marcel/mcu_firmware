@@ -2,20 +2,20 @@
 #define __PID_H__
 
 typedef struct {
-	int kp;
-	int ki;
-	int kd;
-	int setPoint;
-	int integrator;
-	int lastError;
+	float kp;
+	float ki;
+	float kd;
+	float setPoint;
+	float integrator;
+	float lastError;
 } pid_t;
 
-void pid_init(pid_t * pid, int kp, int ki, int kd);
+void pid_init(pid_t * pid, float kp, float ki, float kd);
 void pid_reset(pid_t * pid);
-void pid_kp(pid_t * pid, int kp);
-void pid_ki(pid_t * pid, int ki);
-void pid_kd(pid_t * pid, int kd);
-void pid_setPoint(pid_t * pid, int setPoint);
-int pid_compute(pid_t * pid, int measure);
+void pid_kp(pid_t * pid, float kp);
+void pid_ki(pid_t * pid, float ki);
+void pid_kd(pid_t * pid, float kd);
+void pid_setPoint(pid_t * pid, float setPoint);
+float pid_compute(pid_t * pid, float measure);
 
 #endif //__PID_H__
