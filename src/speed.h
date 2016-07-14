@@ -23,7 +23,7 @@ typedef struct {
 	int timer_id;
 } speed_t;
 
-void speed_init(speed_t * dev, pwm_t * pwm, qei_t * qei, uint16_t period_ms, float kp, float ki, float kd);
+void speed_init(speed_t * dev, pwm_t * pwm, qei_t * qei, uint16_t period_ms, float kp, float ki, float kd, float increment);
 void speed_start(speed_t * dev);
 void speed_stop(speed_t * dev);
 void speed_setPoint(speed_t * dev, int setPoint);

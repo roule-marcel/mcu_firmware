@@ -29,10 +29,10 @@ void speed_compute_cb(void * p) {
 //	cprintf("%d %d %d %d\r\n", (int)(dev->pid.setPoint), (int)(measure), (int)command, (int)(duty*100));
 }
 
-void speed_init(speed_t * dev, pwm_t * pwm, qei_t * qei, uint16_t period_ms, float kp, float ki, float kd) {
+void speed_init(speed_t * dev, pwm_t * pwm, qei_t * qei, uint16_t period_ms, float kp, float ki, float kd, float increment) {
 	dev->pwm = pwm;
 	dev->qei = qei;
-	pid_init(&(dev->pid), kp, ki, kd);
+	pid_init(&(dev->pid), kp, ki, kd, increment);
 	dev->period_ms = period_ms;
 
 	dev->timer_id = timer_add_cb(speed_compute_cb,(void*)dev);

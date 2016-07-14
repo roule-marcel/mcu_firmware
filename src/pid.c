@@ -1,9 +1,14 @@
 #include "pid.h"
 
-void pid_init(pid_t * pid, float kp, float ki, float kd) {
+#include <serial/cprintf/cprintf.h>
+
+void pid_init(pid_t * pid, float kp, float ki, float kd, float setPointIncrement) {
 	pid_kp(pid, kp);
 	pid_ki(pid, ki);
 	pid_kd(pid, kd);
+
+	pid_setPointIncrement(pid, setPointIncrement);
+	pid->setPointFiltred = 0.0;
 
 	pid_reset(pid);
 }
@@ -30,12 +35,32 @@ void pid_setPoint(pid_t * pid, float setPoint) {
 	pid->setPoint = setPoint;
 }
 
+void pid_setPointIncrement(pid_t * pid, float setPointIncrement) {
+	pid->setPointIncrement = setPointIncrement;
+}
+
+char s[64];
 float pid_compute(pid_t * pid, float measure) {
 	float output;
 	float error;
 	float derivativeError;
 
-	error = pid->setPoint - measure;
+	if (pid->setPointFiltred < pid->setPoint) {
+		pid->setPointFiltred += pid->setPointIncrement;
+		if (pid->setPointFiltred > pid->setPoint) {
+			pid->setPointFiltred = pid->setPoint;
+		}
+	}
+	else {
+		pid->setPointFiltred -= pid->setPointIncrement;
+		if (pid->setPointFiltred < pid->setPoint) {
+			pid->setPointFiltred = pid->setPoint;
+		}
+	}
+
+//	cprintf("%d %d\r\n", (int)(pid->setPoint), (int)(pid->setPointFiltred));
+
+	error = pid->setPointFiltred - measure;
 	pid->integrator += error;
 	derivativeError = error - pid->lastError;
 

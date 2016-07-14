@@ -146,8 +146,8 @@ int main(void) {
 	sh_buzzer_set_dev(&buzzer0);
 	buzzer(&buzzer0, 4394, 100);
 
-	speed_init(&speed_l, &pwm_l, &qei_l, 50, 0.0006, 0.0004, 0.0);
-	speed_init(&speed_r, &pwm_r, &qei_r, 50, 0.0006, 0.0004, 0.0);
+	speed_init(&speed_l, &pwm_l, &qei_l, 50, 0.0006, 0.0004, 0.0, 20.0);
+	speed_init(&speed_r, &pwm_r, &qei_r, 50, 0.0006, 0.0004, 0.0, 20.0);
 
 
 	sh_speed_set_dev(&speed_l, &speed_r);

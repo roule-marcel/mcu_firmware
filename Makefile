@@ -16,6 +16,8 @@ LD              = msp430-gcc
 
 TOOL_PATH = $(LIBSOFTCORE_PATH)/opencores/openmsp430/tools/bin
 
+IP = 192.168.1.1
+
 .PHONY: all FORCE clean download download-jtag download-bsl dist
 
 #all should be the first target. it's built when make is runwithout args
@@ -65,8 +67,8 @@ download-bootloader: all
 	tools/bootloader/bootloader.sh ${NAME}.bin
 
 download-bootloader-ssh: all
-	scp ${NAME}.bin 10.42.0.100:~/
-	ssh 10.42.0.100 'bash -s' < tools/bootloader/bootloader.sh ${NAME}.bin
+	scp ${NAME}.bin ${IP}:~/
+	ssh ${IP} 'bash -s' < tools/bootloader/bootloader.sh ${NAME}.bin
 
 
 bin:
