@@ -16,7 +16,7 @@ LD              = msp430-gcc
 
 TOOL_PATH = $(LIBSOFTCORE_PATH)/opencores/openmsp430/tools/bin
 
-IP = 192.168.1.1
+IP = 192.168.1.47
 
 .PHONY: all FORCE clean download download-jtag download-bsl dist
 

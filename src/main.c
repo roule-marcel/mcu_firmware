@@ -20,6 +20,7 @@
 #include "sh_qei.h"
 #include "sh_speed.h"
 #include "sh_buzzer.h"
+#include "sh_srf05.h"
 #include "sh_boot.h"
 
 void blink (void * p) {
@@ -97,6 +98,8 @@ int main(void) {
 
 	buzzer_t buzzer0;
 
+	srf05_t srf05;
+
     WDTCTL = WDTPW | WDTHOLD;           // Init watchdog timer
 
     P3DIR  = 0xff;
@@ -119,6 +122,7 @@ int main(void) {
 	shell_add('e', sh_qei, "encoder");
 	shell_add('s', sh_speed, "speed controller");
 	shell_add('c', sh_speed_config, "speed configuration");
+	shell_add('d', sh_srf05, "srf05");
 	shell_add('b', sh_bootloader, "bootloader");
 
 	sh_help(0, NULL);
@@ -145,6 +149,9 @@ int main(void) {
 	buzzer_init(&buzzer0, 0x1A0);
 	sh_buzzer_set_dev(&buzzer0);
 	buzzer(&buzzer0, 4394, 100);
+
+	srf05_init(&srf05, 0x1B0);
+	sh_srf05_set_dev(&srf05);
 
 	speed_init(&speed_l, &pwm_l, &qei_l, 50, 0.0006, 0.0004, 0.0, 20.0);
 	speed_init(&speed_r, &pwm_r, &qei_r, 50, 0.0006, 0.0004, 0.0, 20.0);
