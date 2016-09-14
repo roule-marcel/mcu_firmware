@@ -22,3 +22,11 @@ uint16_t srf05_read_mm(srf05_t * dev, int num) {
 	ret /= 58;
 	return (uint16_t) ret;
 }
+
+void srf05_set_limits_mm(srf05_t * dev, uint16_t * limits_mm)
+{
+	int i;
+	for (i = 0 ; i < 5 ; i++) {
+		dev->limits_mm[i] = limits_mm[i];
+	}
+}

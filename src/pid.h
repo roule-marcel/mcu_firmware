@@ -6,7 +6,7 @@ typedef struct {
 	float ki;
 	float kd;
 	float setPoint;
-	float setPointIncrement;
+	float setPointIncrement;	// Acceleration ramp
 	float setPointFiltred;
 	float integrator;
 	float lastError;

@@ -14,14 +14,21 @@
 #include <buzzer/buzzer.h>
 
 #include "speed.h"
+#include "odometry.h"
 
 #include "sh_reg.h"
 #include "sh_pwm.h"
 #include "sh_qei.h"
 #include "sh_speed.h"
+#include "sh_odometry.h"
 #include "sh_buzzer.h"
 #include "sh_srf05.h"
 #include "sh_boot.h"
+#include "sh_roam.h"
+
+#define WHEEL_RADIUS 0.06f
+#define DEMI_WHEEL_TRACK 0.15f
+#define PULSE_PER_REVOLUTION 1200
 
 void blink (void * p) {
 	int pattern = (uint16_t)p;
@@ -84,8 +91,9 @@ int main(void) {
     int pos = 0;
     char buf[40];
 
-	int id1;
+//	int id1;
 	int arrow = 0;
+	uint16_t srf05_limits_mm[5] = {500,500,500,500,500};
 
 	pwm_t pwm_l;
 	pwm_t pwm_r;
@@ -95,6 +103,8 @@ int main(void) {
 
 	speed_t speed_l;
 	speed_t speed_r;
+
+	odometry_t odometry;
 
 	buzzer_t buzzer0;
 
@@ -121,8 +131,10 @@ int main(void) {
 	shell_add('p', sh_pwm, "pwm");
 	shell_add('e', sh_qei, "encoder");
 	shell_add('s', sh_speed, "speed controller");
+	shell_add('z', sh_odometry, "odometry");
 	shell_add('c', sh_speed_config, "speed configuration");
-	shell_add('d', sh_srf05, "srf05");
+	shell_add('o', sh_srf05, "obstacle avoidance");
+	shell_add('t', sh_roam, "roam");
 	shell_add('b', sh_bootloader, "bootloader");
 
 	sh_help(0, NULL);
@@ -151,14 +163,26 @@ int main(void) {
 	buzzer(&buzzer0, 4394, 100);
 
 	srf05_init(&srf05, 0x1B0);
+	srf05_set_limits_mm(&srf05,srf05_limits_mm);
 	sh_srf05_set_dev(&srf05);
 
+	// Acceleration ramp is configured through the increment value
 	speed_init(&speed_l, &pwm_l, &qei_l, 50, 0.0006, 0.0004, 0.0, 20.0);
 	speed_init(&speed_r, &pwm_r, &qei_r, 50, 0.0006, 0.0004, 0.0, 20.0);
 
-
 	sh_speed_set_dev(&speed_l, &speed_r);
+	sh_speed_set_srf05(&srf05);
 	sh_speed_init();
+
+	odometry_init(&odometry, WHEEL_RADIUS, DEMI_WHEEL_TRACK, PULSE_PER_REVOLUTION);
+	odometry_set_qei(&odometry, &qei_r, &qei_l);
+	odometry_start(&odometry, 10);	// 10ms
+
+	sh_odometry_set_dev(&odometry);
+
+	sh_roam_set_speed(&speed_l, &speed_r);
+	sh_roam_set_srf05(&srf05);
+	sh_roam_init(100);
 
 	P3OUT = 0x80;
 

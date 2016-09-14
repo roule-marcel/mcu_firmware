@@ -30,7 +30,7 @@ int sh_srf05(int argc, char ** argv) {
 	uint16_t it_max = 0;
 	int ok = 0;
 
-	// d <PERIOD> <IT_MAX>
+	// o <PERIOD> <IT_MAX>
 
 	if (argc == 1) {
 		if (streaming) {

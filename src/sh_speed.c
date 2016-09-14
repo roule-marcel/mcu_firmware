@@ -9,6 +9,7 @@
 
 speed_t * speed_l;
 speed_t * speed_r;
+srf05_t * srf05;
 
 int timer_id = -1;
 
@@ -34,15 +35,20 @@ void sh_speed_set_dev(speed_t * left, speed_t * right) {
 	speed_r = right;
 }
 
+void sh_speed_set_srf05(srf05_t * dev) {
+	srf05 = dev;
+}
+
 int sh_speed(int argc, char ** argv) {
 	uint16_t timeout = 0;
 	int left;
 	int right;
 	int ok;
 
+
 	if (argc < 3) {
 		cprintf("correct usage:\r\n");
-		cprintf("\t%c LEFT RIGHT <TIMEOUT>\r\n", argv[0]);
+		cprintf("\t%c [o] LEFT RIGHT <TIMEOUT>\r\n", argv[0]);
 		return -1;
 	}
 
@@ -58,7 +64,7 @@ int sh_speed(int argc, char ** argv) {
 //	speed_start(speed_l);
 //	speed_start(speed_r);
 
-	speed_setPoint(speed_l, left);
+	speed_setPoint(speed_l, -left);
 	speed_setPoint(speed_r, right);
 
 	return 0;

@@ -32,6 +32,7 @@ void speed_compute_cb(void * p) {
 void speed_init(speed_t * dev, pwm_t * pwm, qei_t * qei, uint16_t period_ms, float kp, float ki, float kd, float increment) {
 	dev->pwm = pwm;
 	dev->qei = qei;
+	// Acceleration ramp is configured through the increment value
 	pid_init(&(dev->pid), kp, ki, kd, increment);
 	dev->period_ms = period_ms;
 

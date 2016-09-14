@@ -5,7 +5,7 @@ LIB             = $(wildcard lib/**/*.c)
 LIB             += $(wildcard lib/*/*/*.c)
 OBJ             = $(SRC:.c=.o) $(LIB:.c=.o)
 
-CFLAGS          = -O2 -Ilib -Wall -g -mcpu=430 -mivcnt=16 -mmpy=16      # Uniarch flags
+CFLAGS          = -O2 -Ilib -Wall -g -mcpu=430 -mivcnt=16 -mmpy=16     # Uniarch flags
 
 # use custom linker script
 LDFLAGS         = -Tlink.ld -Ilib
@@ -34,7 +34,7 @@ bootloader: download-bootloader-ssh
 
 #link everything together
 ${NAME}.elf: ${OBJ}
-	${LD} $(LDFLAGS) -o $@ ${OBJ}
+	${LD} $(LDFLAGS) -o $@ ${OBJ} -lm
 
 # binary image, then .MIF file for quartus
 ${NAME}.bin: ${NAME}.elf

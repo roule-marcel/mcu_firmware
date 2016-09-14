@@ -4,7 +4,7 @@ OUTPUT_ARCH("msp430")
 MEMORY
 {
   data    (rwx)  	: ORIGIN = 0x0200, 	LENGTH = 0x800
-  text    (rx)   	: ORIGIN = 0xc000,      LENGTH = 0x4000-0x20
+  text    (rx)   	: ORIGIN = 0x8000,      LENGTH = 0x8000-0x20
   vectors (rw)  	: ORIGIN = 0xffe0,      LENGTH = 0x20
 }
 REGION_ALIAS("REGION_TEXT", text);
