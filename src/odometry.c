@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <timer/timer.h>
+#include <serial/cprintf/cprintf.h>
 
 // Add two angles and keep them in the ]-Pi;Pi] interval
 float add_angle(float a, float b)
@@ -17,7 +18,7 @@ float add_angle(float a, float b)
 void odometry_cb(void * p) {
 	odometry_t * dev = (odometry_t*)p;
 
-	odometry_compute(dev, -qei_read_steps(dev->qei_l), qei_read_steps(dev->qei_r));
+	odometry_compute(dev, qei_read_steps(dev->qei_l), -qei_read_steps(dev->qei_r));
 }
 
 
@@ -47,8 +48,8 @@ void odometry_compute(odometry_t * dev, int32_t steps_left, int32_t steps_right)
 	float displacement;
 	float delta = (2.0f*M_PI*dev->param.wheel_radius)/(dev->param.pulse_per_revolution);
 
-	uint32_t dl_steps = steps_left - dev->steps_left_old;
-	uint32_t dr_steps = steps_right - dev->steps_right_old;
+	int32_t dl_steps = steps_left - dev->steps_left_old;
+	int32_t dr_steps = steps_right - dev->steps_right_old;
 	dl = dl_steps * delta;
 	dr = dr_steps * delta;
 
@@ -57,17 +58,19 @@ void odometry_compute(odometry_t * dev, int32_t steps_left, int32_t steps_right)
 	/* No displacement */
 	if (dl_steps == 0 && dr_steps == 0)
 	{
-
+//		cprintf("No movement\r\n");
 	}
 	/* Moving straight */
 	else if (dl_steps == dr_steps)
 	{
+//		cprintf("Straight\r\n");
 		dev->position.x += displacement * cos(dev->position.theta);
 		dev->position.y += displacement * sin(dev->position.theta);
 	}
 	/* Pure rotation */
 	else if (dl_steps == dr_steps)
 	{
+//		cprintf("Rotation\r\n");
 		float delta_theta = atan(dr/dev->param.demi_wheel_track);
 		dev->position.theta = add_angle(dev->position.theta, delta_theta);
 //		dev->position.theta += delta_theta;
@@ -75,20 +78,26 @@ void odometry_compute(odometry_t * dev, int32_t steps_left, int32_t steps_right)
 	/* Dans tous les autres cas */
 	else
 	{
+//		cprintf("Other\r\n");
 		float radius;
 		float delta_theta;
 		float x_o, y_o;
 
+//		cprintf("%d %d\r\n", (int)(dl*1000), (int)(dr*1000));
 		radius = dev->param.demi_wheel_track*(dl+dr)/(dr-dl);
+//		cprintf("%d\r\n", (int)(radius*1000));
 		// delta_theta = deplacement/radius;
 		delta_theta = atan((dr-dl)/(dev->param.demi_wheel_track*2.0f));
+//		cprintf("%d\r\n", (int)(delta_theta*1000));
 		x_o = dev->position.x - radius * sin(dev->position.theta);
 		y_o = dev->position.y + radius * cos(dev->position.theta);
+//		cprintf("%d %d\r\n", (int)(x_o*1000), (int)(y_o*1000));
 
 		dev->position.theta = add_angle(dev->position.theta, delta_theta);
 //		dev->position.theta += delta_theta;
 		dev->position.x = x_o + radius * sin(dev->position.theta);
 		dev->position.y = y_o - radius * cos(dev->position.theta);
+//		cprintf("%d %d\r\n", (int)(dev->position.x*1000), (int)(dev->position.y*1000));
 	}
 
 	dev->steps_left_old = steps_left;

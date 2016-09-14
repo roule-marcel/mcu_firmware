@@ -11,12 +11,10 @@
 
 typedef struct {
 	uint16_t * reg;
-	uint16_t limits_mm[5];
 } srf05_t;
 
 int srf05_init(srf05_t * dev, uint16_t per_addr);
 uint16_t srf05_read_raw(srf05_t * dev, int num);
 uint16_t srf05_read_mm(srf05_t * dev, int num);
-void srf05_set_limits_mm(srf05_t * dev, uint16_t * limits_mm);
 
 #endif //__SRF05_H__

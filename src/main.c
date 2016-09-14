@@ -93,7 +93,6 @@ int main(void) {
 
 //	int id1;
 	int arrow = 0;
-	uint16_t srf05_limits_mm[5] = {500,500,500,500,500};
 
 	pwm_t pwm_l;
 	pwm_t pwm_r;
@@ -163,12 +162,11 @@ int main(void) {
 	buzzer(&buzzer0, 4394, 100);
 
 	srf05_init(&srf05, 0x1B0);
-	srf05_set_limits_mm(&srf05,srf05_limits_mm);
 	sh_srf05_set_dev(&srf05);
 
 	// Acceleration ramp is configured through the increment value
-	speed_init(&speed_l, &pwm_l, &qei_l, 50, 0.0006, 0.0004, 0.0, 20.0);
-	speed_init(&speed_r, &pwm_r, &qei_r, 50, 0.0006, 0.0004, 0.0, 20.0);
+	speed_init(&speed_l, &pwm_l, &qei_l, 50, 0.0006, 0.0004, 0.0, 10.0);
+	speed_init(&speed_r, &pwm_r, &qei_r, 50, 0.0006, 0.0004, 0.0, 10.0);
 
 	sh_speed_set_dev(&speed_l, &speed_r);
 	sh_speed_set_srf05(&srf05);
@@ -176,7 +174,7 @@ int main(void) {
 
 	odometry_init(&odometry, WHEEL_RADIUS, DEMI_WHEEL_TRACK, PULSE_PER_REVOLUTION);
 	odometry_set_qei(&odometry, &qei_r, &qei_l);
-	odometry_start(&odometry, 10);	// 10ms
+	odometry_start(&odometry, 100);	// 10ms
 
 	sh_odometry_set_dev(&odometry);
 

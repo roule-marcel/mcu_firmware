@@ -64,22 +64,22 @@ int sh_speed(int argc, char ** argv) {
 //	speed_start(speed_l);
 //	speed_start(speed_r);
 
-	speed_setPoint(speed_l, -left);
+	speed_setPoint(speed_l, left);
 	speed_setPoint(speed_r, right);
 
 	return 0;
 }
 
 void sh_speed_arrow_up() {
-	speed_setPoint(speed_l, -100);
-	speed_setPoint(speed_r, 100);
+	speed_setPoint(speed_l, 100);
+	speed_setPoint(speed_r, -100);
 
 	timer_start_cb(timer_id, 200, 1);
 }
 
 void sh_speed_arrow_down() {
-	speed_setPoint(speed_l, 100);
-	speed_setPoint(speed_r, -100);
+	speed_setPoint(speed_l, -100);
+	speed_setPoint(speed_r, 100);
 
 	timer_start_cb(timer_id, 200, 1);
 }
