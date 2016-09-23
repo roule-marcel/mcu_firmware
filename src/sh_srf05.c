@@ -9,7 +9,7 @@
 
 #include "utils.h"
 
-srf05_t * dev;
+static srf05_t * dev;
 
 void sh_srf05_set_dev(srf05_t * pdev) {
 	dev = pdev;
@@ -17,6 +17,9 @@ void sh_srf05_set_dev(srf05_t * pdev) {
 
 void srf05_disp(void * p) {
 	int i;
+
+	cprintf("o ");
+
 	for (i = 0 ; i < 5 ; i++) {
 		cprintf("%d ", srf05_read_mm(dev,i));
 	}

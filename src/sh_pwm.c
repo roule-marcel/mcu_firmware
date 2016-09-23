@@ -8,8 +8,8 @@
 
 #include "utils.h"
 
-pwm_t * pwm_l;
-pwm_t * pwm_r;
+static pwm_t * pwm_l;
+static pwm_t * pwm_r;
 
 void pwm_timeout_cb(void * p) {
 	pwm_set_duty(pwm_l, 0.5);

@@ -10,16 +10,16 @@
 #define ST_ROAM_OBSTACLE_RIGHT 3
 #define ST_ROAM_OBSTACLE_REAR 4
 
-int roam_state = 0;
+static int roam_state = 0;
 
-speed_t * speed_l;
-speed_t * speed_r;
-srf05_t * srf05;
-int roaming = 0;
-int roam_timer_id;
-uint16_t srf05_limits[5] = {300, 300, 300, 300, 300};
-uint16_t stop_delay = 0;
-uint16_t rotation_delay = 0;
+static speed_t * speed_l;
+static speed_t * speed_r;
+static srf05_t * srf05;
+static int roaming = 0;
+static int roam_timer_id;
+static uint16_t srf05_limits[5] = {500, 500, 500, 500, 0};
+static uint16_t stop_delay = 0;
+static uint16_t rotation_delay = 0;
 
 uint16_t us_read(srf05_t * dev) {
 	int i;
@@ -57,9 +57,14 @@ void roam_cb (void * p) {
 			// Back Left US or Back Right US under threshold
 			// Someone probably following the robot
 			// Stop a few seconds just in case then go ahead
-			else if (us & 0x18) {
+			else if (us & 0x08) {
 //				roam_state = ST_ROAM_OBSTACLE_REAR;
-				cprintf("Yo behind me but I don't give a shit!\r\n");
+//				speed_setPoint(speed_l, 0);
+//				speed_setPoint(speed_r, 0);
+//				stop_delay = 20;
+//				rotation_delay = 0;
+
+				cprintf("Yo behind me\r\n");
 			}
 			// Front US under threshold and Front Left US ~ Front Right US
 			// There is something in front of the robot
@@ -88,7 +93,7 @@ void roam_cb (void * p) {
 				speed_setPoint(speed_l, 0);
 				speed_setPoint(speed_r, 0);
 				stop_delay = 20;
-				rotation_delay = 15;
+				rotation_delay = 10;
 				cprintf("Yo on the right\r\n");
 			}
 			// Front Left US under threshold
@@ -99,7 +104,7 @@ void roam_cb (void * p) {
 				speed_setPoint(speed_l, 0);
 				speed_setPoint(speed_r, 0);
 				stop_delay = 20;
-				rotation_delay = 15;
+				rotation_delay = 10;
 				cprintf("Yo on the left\r\n");
 			}
 	
@@ -128,8 +133,14 @@ void roam_cb (void * p) {
 			else {
 				if (rotation_delay) {
 					if (roam_state == ST_ROAM_OBSTACLE_FRONT) {
-						speed_setPoint(speed_l, 30);
-						speed_setPoint(speed_r, 30);
+						if (srf05_read_mm(srf05, SRF05_FRONT_LEFT) < srf05_read_mm(srf05, SRF05_FRONT_RIGHT)) {
+							speed_setPoint(speed_l, 30);
+							speed_setPoint(speed_r, 30);
+						}
+						else {
+							speed_setPoint(speed_l, -30);
+							speed_setPoint(speed_r, -30);
+						}
 						cprintf("front:rotation\r\n");
 					}
 					else if (roam_state == ST_ROAM_OBSTACLE_LEFT) {
@@ -141,6 +152,11 @@ void roam_cb (void * p) {
 						speed_setPoint(speed_l, 30);
 						speed_setPoint(speed_r, 30);
 						cprintf("right:rotation\r\n");
+					}
+					else if (roam_state == ST_ROAM_OBSTACLE_REAR) {
+//						speed_setPoint(speed_l, 60);
+//						speed_setPoint(speed_r, -60);
+//						cprintf("rear:forward\r\n");
 					}
 					rotation_delay--;
 				}
@@ -169,14 +185,29 @@ void sh_roam_init(uint16_t period_ms) {
 }
 
 int sh_roam(int argc, char ** argv) {
-	roaming = !roaming;
 
-	if (roaming)
-		cprintf("Roaming activated\r\n");
-	else {
-		speed_setPoint(speed_l, 0);
-		speed_setPoint(speed_r, 0);
-		cprintf("Roaming deactivated\r\n");
+	if (argc == 1) {
+		roaming = !roaming;
+
+		if (roaming)
+			cprintf("Roaming activated\r\n");
+		else {
+			speed_setPoint(speed_l, 0);
+			speed_setPoint(speed_r, 0);
+			cprintf("Roaming deactivated\r\n");
+		}
+	}
+	if (argc == 2) {
+		if (argv[1][0] == '0') {
+			roaming = 0;
+			cprintf("Roaming deactivated\r\n");
+			speed_setPoint(speed_l, 0);
+			speed_setPoint(speed_r, 0);
+		}
+		if (argv[1][0] == '1') {
+			roaming = 1;
+			cprintf("Roaming activated\r\n");
+		}
 	}
 	return 0;
 }

@@ -7,9 +7,9 @@
 
 #include "utils.h"
 
-speed_t * speed_l;
-speed_t * speed_r;
-srf05_t * srf05;
+static speed_t * speed_l;
+static speed_t * speed_r;
+static srf05_t * srf05;
 
 int timer_id = -1;
 

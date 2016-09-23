@@ -10,11 +10,11 @@
 
 #include "utils.h"
 
-qei_t * qei_l;
-qei_t * qei_r;
+static qei_t * qei_l;
+static qei_t * qei_r;
 
-pwm_t * pwm_l;
-pwm_t * pwm_r;
+static pwm_t * pwm_l;
+static pwm_t * pwm_r;
 
 void sh_qei_set_dev(qei_t * left, qei_t * right) {
 	qei_l = left;

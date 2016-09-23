@@ -2,7 +2,7 @@
 
 #include "utils.h"
 
-buzzer_t * buzzer0;
+static buzzer_t * buzzer0;
 
 void sh_buzzer_set_dev(buzzer_t * dev) {
 	buzzer0 = dev;
