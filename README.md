@@ -11,7 +11,10 @@ On ubuntu 15.04 (should also do on other versions):
 
 ## HOWTO flash a MSP-EXP430F5529LP program
 
-Use TI's MSPFlasher command-line tool (http://www.ti.com/tool/msp430-flasher)
+Use TI's MSPFlasher command-line tool (http://www.ti.com/tool/msp430-flasher). 
+
+> NOTE : I also tried using (MSP-Debug)[http://dlbeer.co.nz/mspdebug/], but never succeed to flash. Furthermore, it requires separately building libmsp430.so (which is tedious...)
+
 * Ensure your compiled object is in Intel Hex (ihex) format. If needed, use objcopy for conversion
 ````(bash)
 msp430-objcopy -O ihex "myprog.out" "myprog.hex"
