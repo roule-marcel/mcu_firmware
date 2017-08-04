@@ -13,10 +13,10 @@ On ubuntu 15.04 (should also do on other versions):
 
 Use TI's MSPFlasher command-line tool (http://www.ti.com/tool/msp430-flasher)
 * Ensure your compiled object is in Intel Hex (ihex) format. If needed, use objcopy for conversion
-`(bash)
+````(bash)
 msp430-objcopy -O ihex "myprog.out" "myprog.hex"
-`
+````
 * Then write it to the device (mspflasher will automatically look for a connected FET on /dev/ttyACM*)
-`(bash)
+````(bash)
 mspflasher -w "myprog.hex" -v -g -z [VCC]
-`
+````
