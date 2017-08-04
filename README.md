@@ -13,7 +13,7 @@ On ubuntu 15.04 (should also do on other versions):
 
 Use TI's MSPFlasher command-line tool (http://www.ti.com/tool/msp430-flasher). 
 
-> NOTE : I also tried using (MSP-Debug)[http://dlbeer.co.nz/mspdebug/], but never succeed to flash. Furthermore, it requires separately building libmsp430.so (which is tedious...)
+> NOTE : I also tried using [MSP-Debug](http://dlbeer.co.nz/mspdebug/), but never succeed to flash. Furthermore, it requires separately building libmsp430.so (which is tedious...)
 
 * Ensure your compiled object is in Intel Hex (ihex) format. If needed, use objcopy for conversion
 ````(bash)
